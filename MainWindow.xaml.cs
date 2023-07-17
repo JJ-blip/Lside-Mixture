@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Gauge;
 
 namespace Lside_Mixture
 {
@@ -22,6 +23,7 @@ namespace Lside_Mixture
     {
         public MainWindow()
         {
+            this.DataContext = new GaugeViewModel();
             InitializeComponent();
         }
     }
