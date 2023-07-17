@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lside_Mixture.viewModels
+﻿namespace Lside_Mixture.ViewModels
 {
     public class PlotData<T>
     {

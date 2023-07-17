@@ -1,6 +1,7 @@
 ﻿namespace Lside_Mixture.Services
 {
     using System.Runtime.InteropServices;
+    using CTrue.FsConnect;
 
     /// <summary>
     /// This structure must match 1 : 1 with the SimService.definition list contents.
@@ -10,17 +11,26 @@
     {
         // Title
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string Type;
+        public string Title;
 
-        // Altitude 
-        // RPM
-        // EGT 
-        // Throttle
-        // Mixture 
+        [SimVar(NameId = FsSimVar.PlaneAltitudeAboveGround, UnitId = FsUnit.Feet)]
+        public double Altitude;
+
+        [SimVar(NameId = FsSimVar.GeneralEngRpm, Instance = 1, UnitId = FsUnit.Rpm)]
+        public double RPM;
+
+        [SimVar(NameId = FsSimVar.EngExhaustGasTemperature, Instance = 1, UnitId = FsUnit.Celsius)]
+        public double EGT;
+
+        [SimVar(NameId = FsSimVar.GeneralEngThrottleLeverPosition, Instance = 1, UnitId = FsUnit.Percentage)]
+        public double Throttle;
+
+        [SimVar(NameId = FsSimVar.GeneralEngMixtureLeverPosition, Instance = 1, UnitId = FsUnit.Percentage)]
+        public double Mixture;
 
         public override string ToString()
-        {
-            return $"response OnGround:{this.OnGround}, ";
-        }
+       {
+            return $"response Altitude:{this.Altitude},  RPM:{this.RPM}, EGT:{this.EGT}, Throttle:{this.Throttle}, Mixture:{this.Mixture}, ";
+       }
     }
 }
