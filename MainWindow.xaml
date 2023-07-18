@@ -4,46 +4,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gauge;assembly=GuageUserControl"
-        xmlns:vm="clr-namespace:Lside_Mixture.ViewModels"        
+        xmlns:vm="clr-namespace:Lside_Mixture.ViewModels" 
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="400" Background="Azure" WindowStyle="None" ResizeMode="CanResize" WindowStartupLocation="Manual">
 
     <Window.Resources>
-        <vm:MainWindowViewModel x:Key="mwViewModel"/>
-    </Window.Resources>
     
-    <Grid>
-        <StackPanel Orientation="Vertical">
+    </Window.Resources>
 
-            <Grid DataContext="{Binding Source={StaticResource mwViewModel}, Path=SampleViewModel, UpdateSourceTrigger=PropertyChanged}" Margin="0,20,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Label x:Name="NameLabel" Grid.Column="0" Grid.Row="0" Content="Name" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <Label x:Name="Name" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Name}" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <Label x:Name="AltitudeLabel" Grid.Column="0" Grid.Row="1" Content="Altitude" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <TextBlock x:Name="Altitude" Grid.Column="1" Grid.Row="1" Text="{Binding Altitude}" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <Label x:Name="RPMLabel" Grid.Column="0" Grid.Row="2" Content="RPM" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <TextBlock x:Name="RPM" Grid.Column="1" Grid.Row="2" Text="{Binding RPM}" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <Label x:Name="EGTLabel" Grid.Column="0" Grid.Row="3" Content="EGT" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <TextBlock x:Name="EGT" Grid.Column="1" Grid.Row="3" Text="{Binding EGT}" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <Label x:Name="ThrottleLabel" Grid.Column="0" Grid.Row="4" Content="Throttle" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <TextBlock x:Name="Throttle" Grid.Column="1" Grid.Row="4" Text="{Binding Throttle}" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <Label x:Name="MixtureLabel" Grid.Column="0" Grid.Row="5" Content="Mixture" Margin="10, 0" Foreground="Black" FontSize="14"/>
-                <TextBlock x:Name="Mixture" Grid.Column="1" Grid.Row="5" Text="{Binding Mixture}" Margin="10, 0" Foreground="Black" FontSize="14"/>
-            </Grid>
-
-            <local:UserControlGauge Name="A" DataContext="{Binding Source={StaticResource mwViewModel}, Path=GaugeViewModel}"/>
-        </StackPanel>
-    </Grid>
+        <Grid >
+            <StackPanel Orientation="Vertical">
+                <StackPanel Name="SampleStackPanel" Orientation="Vertical">
+                    <Grid DataContext="{Binding UpdateSourceTrigger=PropertyChanged}" Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="NameLabel" Grid.Column="0" Grid.Row="0" Content="Name" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <Label x:Name="Name" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Name}" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <Label x:Name="AltitudeLabel" Grid.Column="0" Grid.Row="1" Content="Altitude" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <TextBlock x:Name="Altitude" Grid.Column="1" Grid.Row="1" Text="{Binding Altitude}" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <Label x:Name="RPMLabel" Grid.Column="0" Grid.Row="2" Content="RPM" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <TextBlock x:Name="RPM" Grid.Column="1" Grid.Row="2" Text="{Binding RPM}" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <Label x:Name="EGTLabel" Grid.Column="0" Grid.Row="3" Content="EGT" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <TextBlock x:Name="EGT" Grid.Column="1" Grid.Row="3" Text="{Binding EGT}" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <Label x:Name="ThrottleLabel" Grid.Column="0" Grid.Row="4" Content="Throttle" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <TextBlock x:Name="Throttle" Grid.Column="1" Grid.Row="4" Text="{Binding Throttle}" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <Label x:Name="MixtureLabel" Grid.Column="0" Grid.Row="5" Content="Mixture" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                        <TextBlock x:Name="Mixture" Grid.Column="1" Grid.Row="5" Text="{Binding Mixture}" Margin="10, 0" Foreground="Black" FontSize="14"/>
+                    </Grid>
+                </StackPanel>
+            <StackPanel Name="GuageStackPanel" Orientation="Vertical" Margin="20,20,20,0">
+                    <local:UserControlGauge DataContext="{Binding UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+   
 </Window>

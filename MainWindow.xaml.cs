@@ -24,7 +24,9 @@
             this.viewModel.SampleViewModel = new SampleViewModel();
             this.viewModel.GaugeViewModel = new GaugeViewModel();
 
-            this.DataContext = this.viewModel;
+            // defined within the MainWindow.xml file
+            SampleStackPanel.DataContext = this.viewModel.SampleViewModel;
+            GuageStackPanel.DataContext = this.viewModel.GaugeViewModel;
         }
     }
 }
