@@ -34,9 +34,9 @@
     </Window.Resources>
     
     <Window.Template>
-        <ControlTemplate TargetType="Window">
+        <ControlTemplate TargetType="Window" >
             <Border BorderBrush="Gray" BorderThickness="3">
-                <Grid>
+                <Grid Background="BlanchedAlmond">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="*"/>
@@ -51,11 +51,11 @@
     </Window.Template>
     
         <Grid >
-            <StackPanel Orientation="Vertical">
-                <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="10,10,0,0" TextWrapping="Wrap" Text="In simulation Mixture monitor for MSFS 2020:" VerticalAlignment="Top" FontSize="16" Width="320"/>
+        <StackPanel Name="MainWindowStack" Orientation="Vertical">
+            <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,0" Text="In sim Mixture monitor for MSFS 2020" VerticalAlignment="Center" FontSize="16" />
                 <TextBlock x:Name="versionLabel" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="0.783,1.633">
                     <TextBlock.Text>
-                        <MultiBinding StringFormat=" Lside-Mixture V{0}">
+                        <MultiBinding StringFormat="Lside-Mixture V{0}">
                             <Binding Path="Version"/>
                         </MultiBinding>
                     </TextBlock.Text>

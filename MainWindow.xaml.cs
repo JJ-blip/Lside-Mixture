@@ -38,6 +38,7 @@
             // defined within the MainWindow.xml file
             SampleStackPanel.DataContext = this.viewModel.SampleViewModel;
             GuageStackPanel.DataContext = this.viewModel.GaugeViewModel;
+            MainWindowStack.DataContext = this.viewModel;
 
         }
 
