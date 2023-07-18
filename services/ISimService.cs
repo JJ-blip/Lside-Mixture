@@ -1,4 +1,6 @@
-﻿namespace Lside_Mixture.Services
+﻿using Lside_Mixture.Models;
+
+namespace Lside_Mixture.Services
 {
     public interface ISimService
     {
@@ -10,6 +12,11 @@
         bool Crashed
         {
             get;
+        }
+
+        SampleModel SampleModel 
+        { 
+            get; 
         }
     }
 }

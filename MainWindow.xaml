@@ -6,15 +6,67 @@
         xmlns:local="clr-namespace:Gauge;assembly=GuageUserControl"
         xmlns:vm="clr-namespace:Lside_Mixture.ViewModels" 
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="400" Background="Azure" WindowStyle="None" ResizeMode="CanResize" WindowStartupLocation="Manual">
+        Title="Lside-Mixture" 
+            Height="750" Width="350" Background="Azure" 
+            Topmost="True" 
+            WindowStyle="ThreeDBorderWindow" 
+            ShowInTaskbar="True">
 
     <Window.Resources>
-    
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <Style TargetType="{x:Type Button}" x:Key="DarkButton">
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#ff6666"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
-
+    
+    <Window.Template>
+        <ControlTemplate TargetType="Window">
+            <Border BorderBrush="Gray" BorderThickness="3">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="Gray" BorderThickness="2">
+                        <TextBlock x:Name="header" HorizontalAlignment="Center" VerticalAlignment="Center"  Loaded="Header_LoadedHandler">Lside-Mixture - Mixture Monitor</TextBlock>
+                    </Border>
+                    <ContentPresenter Grid.Row="1" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </Window.Template>
+    
         <Grid >
             <StackPanel Orientation="Vertical">
-                <StackPanel Name="SampleStackPanel" Orientation="Vertical">
+                <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="10,10,0,0" TextWrapping="Wrap" Text="In simulation Mixture monitor for MSFS 2020:" VerticalAlignment="Top" FontSize="16" Width="320"/>
+                <TextBlock x:Name="versionLabel" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="0.783,1.633">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat=" Lside-Mixture V{0}">
+                            <Binding Path="Version"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            <GroupBox x:Name="groupBox_Buttons" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="300">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="buttonLandings" Content="Graph" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Width="99" Height="32" Style="{DynamicResource RoundButton}" Click="ButtonGraph_Click"/>
+                    <Button x:Name="buttonLean" Content="Lean" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Width="99" Height="32" Style="{DynamicResource RoundButton}" Click="ButtonLean_Click" />
+                </StackPanel>
+            </GroupBox>
+            <StackPanel Name="SampleStackPanel" Orientation="Vertical">
                     <Grid DataContext="{Binding UpdateSourceTrigger=PropertyChanged}" Margin="0,20,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
@@ -43,9 +95,16 @@
                         <TextBlock x:Name="Mixture" Grid.Column="1" Grid.Row="5" Text="{Binding Mixture}" Margin="10, 0" Foreground="Black" FontSize="14"/>
                     </Grid>
                 </StackPanel>
-            <StackPanel Name="GuageStackPanel" Orientation="Vertical" Margin="20,20,20,0">
+                <StackPanel Name="GuageStackPanel" Orientation="Vertical" Margin="20,20,20,0">
                     <local:UserControlGauge DataContext="{Binding UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
+                <GroupBox x:Name="groupBox_Status" Header="Status" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="323" >
+                    <Grid HorizontalAlignment="Left" Height="40" Margin="10,10,-1.8,-6.4" Width="290" VerticalAlignment="Top">
+                        <Ellipse Fill="{Binding ConnectedColor, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Margin="0,8,0,0"/>
+                        <Label x:Name="label" Content="{Binding ConnectedString}" HorizontalAlignment="Left" Margin="25,5,0,0" VerticalAlignment="Top"  RenderTransformOrigin="0.599,1.336"/>
+                        <Button x:Name="buttonUpdate" Content="Updates Available" HorizontalAlignment="Left" Margin="185,0,0,0" VerticalAlignment="Top" Width="105" Foreground="#FFF1FAEE" Height="37" Click="ButtonUpdate_Click" Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolToVis}}" Style="{DynamicResource DarkButton}"/>
+                    </Grid>
+                </GroupBox>                
             </StackPanel>
         </Grid>
    

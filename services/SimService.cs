@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Threading;
     using CTrue.FsConnect;
+    using Lside_Mixture.Models;
     using Serilog;
 
     /// <summary>
@@ -22,6 +23,8 @@
         private static bool safeToRead = true;
 
         private static bool simulationIsPaused = false;
+
+        private static SampleModel sampleModel = new SampleModel();
 
         // timer, task reads data from a SimConnection
         private readonly DispatcherTimer dataReadDispatchTimer = new DispatcherTimer();
@@ -81,7 +84,11 @@
             get { return this.connected; }
             private set { this.connected = value; }
         }
-         
+
+        public SampleModel SampleModel {
+            get { return sampleModel; }  
+        }
+
         private static void HandleReceivedFsData(object sender, FsDataReceivedEventArgs e)
         {
             if (simulationIsPaused)
@@ -102,7 +109,7 @@
                 if (e.RequestId == (uint)Requests.PlaneInfoRequest)
                 {
                     var planeInfoResponse = (PlaneInfoResponse)e.Data.FirstOrDefault();
-                    // stateMachine.Handle(planeInfoResponse);
+                    sampleModel.Handle(planeInfoResponse);
                 }
             }
             catch (Exception ex)
