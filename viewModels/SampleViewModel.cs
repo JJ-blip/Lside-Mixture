@@ -78,6 +78,5 @@
         private int egt;
         private int throttle;
         private int mixture;
-
     }
 }

@@ -3,8 +3,10 @@
     using System;
     using System.ComponentModel;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Windows.Threading;
     using CTrue.FsConnect;
+    using Lside_Mixture.Managers;
     using Lside_Mixture.Models;
     using Serilog;
 
@@ -37,6 +39,8 @@
 
         private readonly FsConnect fsConnect = new FsConnect();
 
+        private readonly EngineManager engineManager;
+
         private int planeInfoDefinitionId;
 
         private bool running = false;
@@ -65,7 +69,11 @@
 
             this.fsConnect.Crashed += this.FsConnect_Crashed;
             this.fsConnect.FlightLoaded += this.FsConnect_Loaded;
-         
+
+            FsConnect managerfsConnect = new FsConnect();
+            managerfsConnect.Connect("TestApp", "localhost", 500, SimConnectProtocol.Ipv4);
+            this.engineManager = new EngineManager(managerfsConnect);
+            this.engineManager.Initialize();
         }
 
         private enum Requests
@@ -89,6 +97,23 @@
             get { return sampleModel; }  
         }
 
+        public PlaneInfoResponse MostRecentSample
+        {
+            get { return mostRecentplaneInfoResponse; }
+        }
+
+        /// <summary>
+        /// Sets the engine Mixture, in %.
+        /// </summary>
+        /// <param name="heading"></param>
+        public void SetMixture(double mixture)
+        {
+            engineManager.SetMixture(mixture);
+            engineManager.Update();
+        }
+
+        private static PlaneInfoResponse mostRecentplaneInfoResponse;
+
         private static void HandleReceivedFsData(object sender, FsDataReceivedEventArgs e)
         {
             if (simulationIsPaused)
@@ -109,6 +134,7 @@
                 if (e.RequestId == (uint)Requests.PlaneInfoRequest)
                 {
                     var planeInfoResponse = (PlaneInfoResponse)e.Data.FirstOrDefault();
+                    mostRecentplaneInfoResponse = planeInfoResponse;
                     sampleModel.Handle(planeInfoResponse);
                 }
             }
@@ -159,9 +185,6 @@
             {
                 if (!this.running)
                 {
-                   // this.EventHandler += this.FlightEventHandler;
-                   // stateMachine = new StateMachine(new ConnectedState(), this.EventHandler);
-
                     this.running = true;
                     this.dataReadDispatchTimer.Start();
                 }

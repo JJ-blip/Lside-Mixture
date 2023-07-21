@@ -1,8 +1,9 @@
-﻿using Lside_Mixture.Models;
+﻿using Lside_Mixture.Managers;
+using Lside_Mixture.Models;
 
 namespace Lside_Mixture.Services
 {
-    public interface ISimService
+    public interface ISimService 
     {
         bool Connected
         {
@@ -17,6 +18,17 @@ namespace Lside_Mixture.Services
         SampleModel SampleModel 
         { 
             get; 
+        }
+
+        /// <summary>
+        /// Sets the engine Mixture, in %.
+        /// </summary>
+        /// <param name="heading"></param>
+        void SetMixture(double mixture);
+
+        PlaneInfoResponse MostRecentSample
+        {
+            get;
         }
     }
 }

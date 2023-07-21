@@ -9,6 +9,7 @@
     using Gauge;
     using Lside_Mixture.Services;
     using Lside_Mixture.ViewModels;
+    using Lside_Mixture.Views;
     using Microsoft.Extensions.DependencyInjection;
     using Octokit;
 
@@ -18,6 +19,7 @@
     public partial class MainWindow : Window
     {
         private static string updateUri;
+        private static MixtureChartWindow openGraphWindow = null;
 
         private readonly ISimService simservice = App.Current.Services.GetService<ISimService>();
 
@@ -54,9 +56,21 @@
         }
 
         // displays Graph
-        private void ButtonGraph_Click(object sender, RoutedEventArgs e)
+        private void ButtonGraph_Click(object sender, RoutedEventArgs rea)
         {
 
+            if (openGraphWindow == null)
+            {
+                // create window & let it do its thing.
+                openGraphWindow = new MixtureChartWindow();
+                openGraphWindow.Show();
+                openGraphWindow.Focus();
+                openGraphWindow.Closed += (s, e) => openGraphWindow = null;
+            }
+            else
+            {
+                openGraphWindow.Focus();
+            }
         }
 
         // Leans the plane at optimum mixture
