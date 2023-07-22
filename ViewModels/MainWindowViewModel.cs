@@ -1,6 +1,7 @@
 ﻿namespace Lside_Mixture.ViewModels
 {
     using System.ComponentModel;
+    using Serilog;
     using Gauge;
     using Lside_Mixture.Services;
     using Microsoft.Extensions.DependencyInjection;

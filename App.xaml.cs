@@ -5,13 +5,20 @@
     using System.Windows;
     using Lside_Mixture.Services;
     using Microsoft.Extensions.DependencyInjection;
+    using Serilog;
 
     public partial class App : Application
     {
         public App()
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
             this.Services = ConfigureServices();
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+
         }
 
         /// <summary>

@@ -6,6 +6,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using System.Windows.Interop;
     using Gauge;
     using Lside_Mixture.Services;
     using Lside_Mixture.ViewModels;
@@ -63,6 +64,12 @@
             {
                 // create window & let it do its thing.
                 openGraphWindow = new MixtureChartWindow();
+
+                // set as child
+                WindowInteropHelper child = new WindowInteropHelper(openGraphWindow);
+                WindowInteropHelper parent = new WindowInteropHelper(this);
+                child.Owner = parent.Handle;
+                
                 openGraphWindow.Show();
                 openGraphWindow.Focus();
                 openGraphWindow.Closed += (s, e) => openGraphWindow = null;

@@ -2,18 +2,23 @@
 {
     using System;
     using System.Data;
+    using System.Drawing.Printing;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using Lside_Mixture.Services;
+    using Lside_Mixture.Utils;
     using Lside_Mixture.Views;
     using Microsoft.Extensions.DependencyInjection;
+    using Serilog;
 
     public class MixtureChartViewModel : BindableBase
     {
+        private const int RpmDropThreshold = 50;
+        private const int EgtChangeWaitDelayMSec = 10000;
         private readonly ISimService simservice = App.Current.Services.GetService<ISimService>();
 
-        // The path to the csv file of slip data
-        private readonly string path;
+        private BoundedQueue<double> EgtSamples;
 
         public MixtureChartViewModel(MixtureChartWindow mixtureChartWindow)
         {
@@ -73,16 +78,62 @@
             var mix = initialMixture;
 
             int idx = 1;
-            while (mix > 15)
+            while (mix > 15 && this.RpmOk())
             {
+                EgtSamples = new BoundedQueue<double>(5);
+
                 mix = mix - 5;
                 simservice.SetMixture(mix);
-                Thread.Yield();
-                Thread.Sleep(5000);
+
+                // practically never stabalises, always waits 5 seconds
+                new TaskUtil().WaitUntil(EgtChangeWaitDelayMSec, EGTStabilised);
+
                 MixtureArray[idx++] = simservice.MostRecentSample;
             }
             simservice.SetMixture(initialMixture);
             MixtureArray = MixtureArray.Where(x => x.Mixture != 0).ToArray();
+        }
+
+        // return true if RPM has not dropped significantly from its peak
+        private bool RpmOk()
+        {
+            double[] rpmArray = MixtureArray.Where(x => x.Mixture != 0).ToArray().Select(item => item.RPM).ToArray();
+            double peak = rpmArray.Max();
+            if ((rpmArray.Length == 1) || peak - rpmArray[rpmArray.Length -1] < RpmDropThreshold)
+            {
+                // not enough data, or most current value has dropped too much
+                return true;
+            }
+            Log.Debug("RPM has dropped to {0:0} from its {1:0}", rpmArray[rpmArray.Length - 1], peak );
+            return false;
+        }
+
+        // EGT takes a long time (too long) to stabalise, so in practice, waiting 5 seconds just hives an indicative temperature, RPM is quicker 
+        private bool EGTStabilised()
+        {
+            /*
+            bool stabilised = false;
+            string ts = DateTime.UtcNow.ToString("ss.fff  ", CultureInfo.InvariantCulture) + simservice.MostRecentSample.EGT;
+            Log.Debug("time {0} ", ts);
+
+            EgtSamples.Enqueue(simservice.MostRecentSample.EGT);
+            if (EgtSamples.Count() > 4)
+            {
+                var diff = Math.Abs(EgtSamples.ElementAt(EgtSamples.Count() -1) - EgtSamples.ElementAt(0));
+                if (diff < 0.5)
+                {
+                    // last 5 samples within 5 C of each other
+                    stabilised = true;
+                }
+            }
+
+            if (stabilised)
+            {
+                // Reset the counter and signal the waiting thread.
+                return true;
+            }
+            */
+            return false;
         }
 
         private DataTable GetDataTable(PlaneInfoResponse[] mixtureArray)
