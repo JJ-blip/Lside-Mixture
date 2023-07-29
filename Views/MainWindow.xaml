@@ -1,4 +1,4 @@
-﻿<Window x:Class="Lside_Mixture.MainWindow"
+﻿<Window x:Class="Lside_Mixture.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -63,7 +63,7 @@
             <GroupBox x:Name="groupBox_Buttons" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="300">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="buttonLandings" Content="Graph" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Width="99" Height="32" Style="{DynamicResource RoundButton}" Click="ButtonGraph_Click"/>
-                    <Button x:Name="buttonLean" Content="Lean" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Width="99" Height="32" Style="{DynamicResource RoundButton}" Click="ButtonLean_Click" />
+                    <Button x:Name="buttonPeakEGT" Content="Peak EGT" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Width="99" Height="32" Style="{DynamicResource RoundButton}" Click="ButtonPeakEGT_Click" />
                 </StackPanel>
             </GroupBox>
             <StackPanel Name="SampleStackPanel" Orientation="Vertical">

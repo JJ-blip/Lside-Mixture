@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Windows;
     using Lside_Mixture.Services;
+    using Lside_Mixture.Views;
     using Microsoft.Extensions.DependencyInjection;
     using Serilog;
 
@@ -12,7 +13,7 @@
         public App()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.Console()
                 .CreateLogger();
 

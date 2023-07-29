@@ -85,7 +85,7 @@
                 mix = mix - 5;
                 simservice.SetMixture(mix);
 
-                // practically never stabalises, always waits 5 seconds
+                // practically never stabilises in 5 s , thus we always waits 5 seconds
                 new TaskUtil().WaitUntil(EgtChangeWaitDelayMSec, EGTStabilised);
 
                 MixtureArray[idx++] = simservice.MostRecentSample;

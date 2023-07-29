@@ -1,4 +1,4 @@
-﻿namespace Lside_Mixture
+﻿namespace Lside_Mixture.Views
 {
     using System;
     using System.ComponentModel;
@@ -21,6 +21,7 @@
     {
         private static string updateUri;
         private static MixtureChartWindow openGraphWindow = null;
+        private static PeakEGTWindow peakEGTWindow = null;
 
         private readonly ISimService simservice = App.Current.Services.GetService<ISimService>();
 
@@ -81,9 +82,26 @@
         }
 
         // Leans the plane at optimum mixture
-        private void ButtonLean_Click(object sender, RoutedEventArgs e)
+        private void ButtonPeakEGT_Click(object sender, RoutedEventArgs rea)
         {
+            if (openGraphWindow == null)
+            {
+                // create window & let it do its thing.
+                peakEGTWindow = new PeakEGTWindow();
 
+                // set as child
+                WindowInteropHelper child = new WindowInteropHelper(peakEGTWindow);
+                WindowInteropHelper parent = new WindowInteropHelper(this);
+                child.Owner = parent.Handle;
+
+                peakEGTWindow.Show();
+                peakEGTWindow.Focus();
+                peakEGTWindow.Closed += (s, e) => peakEGTWindow = null;
+            }
+            else
+            {
+                peakEGTWindow.Focus();
+            }
         }
 
         private void ButtonUpdate_Click(object sender, RoutedEventArgs e)

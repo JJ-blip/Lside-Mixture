@@ -164,10 +164,14 @@
     <Compile Include="Utils\BoundedQueueException.cs" />
     <Compile Include="Utils\TaskUtil.cs" />
     <Compile Include="ViewModels\MixtureChartViewModel.cs" />
+    <Compile Include="ViewModels\PeakEGTViewModel.cs" />
     <Compile Include="Views\MixtureChartWindow.xaml.cs">
       <DependentUpon>MixtureChartWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Views\PeakEGTWindow.xaml.cs">
+      <DependentUpon>PeakEGTWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -178,7 +182,7 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\CaptureAndGraphLeaningMessage.cs" />
     <Compile Include="Common\PlaneInfoResponse.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -191,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MixtureChartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PeakEGTWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
