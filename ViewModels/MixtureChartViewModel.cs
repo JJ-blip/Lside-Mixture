@@ -15,13 +15,14 @@
     public class MixtureChartViewModel : BindableBase
     {
         // max acceptable drop in RPM
-        private const int RpmDropThreshold = 200;
+        private int RpmDropThreshold = Properties.Settings.Default.RpmDropThreshold;
         // max acceptable drom in Peak EGT, from observed peak.
-        private const int EgtDropThreshold = 100;
+        private int EgtDropThreshold = Properties.Settings.Default.EgtDropThreshold;
         // difference between 2 successive reading, need to be below this value to be 'stable'
-        private const double TempStabilisedThreshold = 2;
+        private double TempStabilisedThreshold = Properties.Settings.Default.TempStabilisedThreshold;
+        // max time we will wait for egt to stabilise
+        private  int EgtChangeWaitDelayMSec = Properties.Settings.Default.EgtChangeWaitDelayMSec;
 
-        private const int EgtChangeWaitDelayMSec = 10000;
         private readonly ISimService simservice = App.Current.Services.GetService<ISimService>();
 
         private BoundedQueue<double> EgtSamples;

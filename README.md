@@ -18,12 +18,33 @@
 	- decreases (leans) the mixture in 5% steps capturing engine EGT and RPM after 10 seconds
 		+ EGT takes long time (10's of seconds) to stabilise if  mixture changes significantly
 		+ RPM stabilises pretty quickly (couple seconds)
-	- leaning continues to a 15% mixture, but halts if RPM drops more than 50 RPM from its peak
+	- leaning continues to a 15% mixture, but halts if RPM drops more than a safe RPM from its peak
 	- The initial mixture % is restored after the computations & graph is shown
 
 
-## Settings
+## Configuration
 
-* RpmDropThreshold, default 50, While adjusting the mixture if the RPM drops by this amount from its peak (seen during the graphing process), then the process is terminated.
-* EgtChangeWaitDelayMSec, default 10000 (10 seconds) - the time the EGT is alowed to stabalise before moving to the next value. Shortening the value means the measured RGT will lag the stable EGT more. The RPM will be stable within a few seconds.
-* 
+* The file Lside-Mixture.exe.config contains configuration properties for the above. If you edit it, you need to follow the files obvious pattern.
+   - RpmDropThreshold
+     * max acceptable drop in RPM
+   -  EgtDropThreshold   
+     * max acceptable drom in Peak EGT, from observed peak
+   - TempStabilisedThreshold 
+     * difference between 2 successive reading, need to be below this value to be 'stable'
+   - EgtChangeWaitDelayMSec 
+     * max time we will wait for egt to stabilise
+    
+## To Install (Tested on 64 bit windows only)
+
+Link to executable:  https://github.com/JJ-blip/lside/releases/download/v1.0.0/Lside-Mixture.V100.zip
+
+* unzip the application zip (e.g. Lside-Mixture.V100.zip)
+* execute Lside-Mixture.exe
+
+Lside.exe.config contains user changeable properties. 
+
+## Known issues
+* To early to say
+
+## License
+Distributed under the GNU General Public License v3.0 License.
