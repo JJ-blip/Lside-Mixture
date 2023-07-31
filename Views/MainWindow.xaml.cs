@@ -8,6 +8,7 @@
     using System.Windows.Input;
     using System.Windows.Interop;
     using Gauge;
+    using Lside_Mixture.Models;
     using Lside_Mixture.Services;
     using Lside_Mixture.ViewModels;
     using Lside_Mixture.Views;
@@ -37,13 +38,14 @@
             this.viewModel = new MainWindowViewModel();
             this.viewModel.SampleViewModel = new SampleViewModel();
 
-            this.viewModel.GaugeViewModel = new GaugeViewModel();
+            this.viewModel.GaugeViewModel = new GaugeViewModel(800.0, 1200.0);
 
             // defined within the MainWindow.xml file
             SampleStackPanel.DataContext = this.viewModel.SampleViewModel;
             GuageStackPanel.DataContext = this.viewModel.GaugeViewModel;
             MainWindowStack.DataContext = this.viewModel;
 
+            simservice.SampleModel.PropertyChanged += this.SampleViewModel_PropertyChanged;
         }
 
         private void SampleViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -52,6 +54,8 @@
             {
                 case "PlaneInfoResponse":
                     {
+                        var pir = ((SampleModel)sender).planeInfoResponse;
+                        this.viewModel.GaugeViewModel.ScaledValue = Convert.ToInt32(pir.EGT);
                     }
                     break;
             }

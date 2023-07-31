@@ -1,9 +1,13 @@
 ﻿namespace Gauge
-
 {
+    using System;
     using System.ComponentModel;
     public class GaugeViewModel : INotifyPropertyChanged
     {
+
+        private double minValue;
+        private double maxValue;
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(string info)
         {
@@ -19,7 +23,17 @@
             Value = 0;
         }
 
+        public GaugeViewModel(double minValue, double maxValue)
+        {
+            Angle = -85;
+            Value = 0;
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+        }
+
         int _angle;
+
+        // 0 to 170 usage 
         public int Angle
         {
             get
@@ -31,6 +45,22 @@
             {
                 _angle = value;
                 NotifyPropertyChanged("Angle");
+            }
+        }
+
+        // minValue to maxValue usage
+        public int ScaledValue
+        {
+            get
+            {
+                return _value;
+            }
+
+            set
+            {
+                _value = value;
+                Angle = Convert.ToInt32((170.0 / this.maxValue) * (value - this.minValue));
+                NotifyPropertyChanged("Value");
             }
         }
 
