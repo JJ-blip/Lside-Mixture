@@ -14,7 +14,13 @@
 
     public class MixtureChartViewModel : BindableBase
     {
-        private const int RpmDropThreshold = 50;
+        // max acceptable drop in RPM
+        private const int RpmDropThreshold = 200;
+        // max acceptable drom in Peak EGT, from observed peak.
+        private const int EgtDropThreshold = 100;
+        // difference between 2 successive reading, need to be below this value to be 'stable'
+        private const double TempStabilisedThreshold = 2;
+
         private const int EgtChangeWaitDelayMSec = 10000;
         private readonly ISimService simservice = App.Current.Services.GetService<ISimService>();
 
@@ -72,21 +78,25 @@
             // leans mixture in 5% steps capturing egt etc
             // stops after peak (or rpm drops)
 
-            MixtureArray = new PlaneInfoResponse[20];
+            MixtureArray = new PlaneInfoResponse[50];
             MixtureArray[0] = simservice.MostRecentSample;
             var initialMixture = MixtureArray[0].Mixture;
             var mix = initialMixture;
 
             int idx = 1;
-            while (mix > 15 && this.RpmOk())
+            while (mix > 15 && this.RpmOk() && this.EgtOk() && idx < (MixtureArray.Length - 1))
             {
                 EgtSamples = new BoundedQueue<double>(5);
 
-                mix = mix - 5;
+                mix = mix - 3;
                 simservice.SetMixture(mix);
 
                 // practically never stabilises in 5 s , thus we always waits 5 seconds
-                new TaskUtil().WaitUntil(EgtChangeWaitDelayMSec, EGTStabilised);
+                int waitDelay = new TaskUtil().WaitUntil(EgtChangeWaitDelayMSec, EGTStabilised);
+
+                {
+                    Log.Information(String.Format("reading {0:0000} F at {1:00}% after {2} sec", simservice.MostRecentSample.EGT, simservice.MostRecentSample.Mixture, waitDelay));
+                }
 
                 MixtureArray[idx++] = simservice.MostRecentSample;
             }
@@ -104,36 +114,44 @@
                 // not enough data, or most current value has dropped too much
                 return true;
             }
-            Log.Debug("RPM has dropped to {0:0} from its {1:0}", rpmArray[rpmArray.Length - 1], peak );
+            Log.Debug("RPM has dropped to {0:0} from its {1:0} peak", rpmArray[rpmArray.Length - 1], peak );
+            return false;
+        }
+
+        private bool EgtOk()
+        {
+            double[] egtArray = MixtureArray.Where(x => x.Mixture != 0).ToArray().Select(item => item.EGT).ToArray();
+            double peak = egtArray.Max();
+            if ((egtArray.Length == 1) || peak - egtArray[egtArray.Length - 1] < EgtDropThreshold)
+            {
+                // not enough data, or most current value has dropped too much
+                return true;
+            }
+            Log.Debug("EGT has dropped to {0:0} from its {1:0} peak", egtArray[egtArray.Length - 1], peak);
             return false;
         }
 
         // EGT takes a long time (too long) to stabalise, so in practice, waiting 5 seconds just hives an indicative temperature, RPM is quicker 
         private bool EGTStabilised()
         {
-            /*
             bool stabilised = false;
-            string ts = DateTime.UtcNow.ToString("ss.fff  ", CultureInfo.InvariantCulture) + simservice.MostRecentSample.EGT;
-            Log.Debug("time {0} ", ts);
+
+            if (EgtSamples.Count() < 3)
+            {
+                // need 3 samples at least 1 second apart
+                EgtSamples.Enqueue(simservice.MostRecentSample.EGT);
+                return false;
+            }
 
             EgtSamples.Enqueue(simservice.MostRecentSample.EGT);
-            if (EgtSamples.Count() > 4)
+            var diff = Math.Abs(EgtSamples.ElementAt(EgtSamples.Count() - 1) - EgtSamples.ElementAt(EgtSamples.Count() - 2));
+            if (diff < TempStabilisedThreshold)
             {
-                var diff = Math.Abs(EgtSamples.ElementAt(EgtSamples.Count() -1) - EgtSamples.ElementAt(0));
-                if (diff < 0.5)
-                {
-                    // last 5 samples within 5 C of each other
-                    stabilised = true;
-                }
+                // last 2
+                stabilised = true;
             }
 
-            if (stabilised)
-            {
-                // Reset the counter and signal the waiting thread.
-                return true;
-            }
-            */
-            return false;
+            return stabilised;
         }
 
         private DataTable GetDataTable(PlaneInfoResponse[] mixtureArray)

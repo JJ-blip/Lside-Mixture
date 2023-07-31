@@ -53,20 +53,45 @@
 
                 var plt = this.wpfPlot.Plot;
 
-                plt.YLabel(this.EGT.Title);
+                plt.YLabel("EGT F");
+                plt.YAxis2.Color(Color.Red);
                 plt.XLabel($"Mixture %");
+
+                // Mixture data is plotted inverted with display sign inverted
+                this.Mixture.Data = this.Mixture.Data.Select(val => -1 * val).ToArray();
+                plt.XAxis.TickLabelNotation(invertSign: true);
 
                 this.mixturePlot = this.AddScatter(plt, this.Mixture, this.EGT);
                 this.mixturePlot.XAxisIndex = 0;
+                this.mixturePlot.Color = Color.Red;
 
                 this.rpmPlot = this.AddScatter(plt, this.Mixture, this.RPM);
-                this.yAxis2 = this.wpfPlot.Plot.AddAxis(ScottPlot.Renderable.Edge.Left);
+                this.rpmPlot.Color = Color.Blue;
+                this.yAxis2 = this.wpfPlot.Plot.AddAxis(ScottPlot.Renderable.Edge.Left, null, "RPM");
                 this.rpmPlot.YAxisIndex = yAxis2.AxisIndex;
                 this.yAxis2.Color(this.rpmPlot.Color);
                 this.rpmPlot.MarkerShape = MarkerShape.triDown;
 
                 double peakEGT = this.EGT.Data.Max();
-                plt.AddHorizontalLine(peakEGT - 50, this.mixturePlot.Color, style: LineStyle.Dash, label: "EGT - 50");
+                double mixtureAtPeakEGT = this.Mixture.Data[this.EGT.Data.ToList().IndexOf(peakEGT)];
+                plt.AddHorizontalLine(peakEGT - 50, this.mixturePlot.Color, style: LineStyle.Dash, label: "EGT - 50 F");
+
+                var hline = plt.AddHorizontalLine(peakEGT);
+                hline.Color = this.mixturePlot.Color;
+                hline.LineWidth = 1;
+                hline.PositionLabel = true;
+                hline.PositionLabelBackground = hline.Color;
+                hline.DragEnabled = true;
+
+                var vline = plt.AddVerticalLine(mixtureAtPeakEGT);
+                vline.LineWidth = 1;
+                vline.PositionLabel = true;
+                vline.PositionLabelBackground = hline.Color;
+                vline.DragEnabled = true;
+
+                var ypos = Convert.ToInt32(this.EGT.Data.Min()) + 20;
+                plt.AddText("Rich", -95, ypos, size: 14, color: Color.Red);
+                plt.AddText("Lean", -30, ypos, size: 14, color: Color.Red);
 
                 plt.Legend();
 

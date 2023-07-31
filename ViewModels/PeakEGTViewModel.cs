@@ -67,10 +67,10 @@
             // define the convergence threshold
             double epsilon = CONVERGENCE_EPSILON;
 
-            return PeakEGTSucessiveApproxAlgorithm(samples, epsilon);
+            return PeakEGTSucessiveApproxAlgorithm(samples, epsilon, step);
         }
 
-        private double PeakEGTSucessiveApproxAlgorithm(BoundedQueue<(double temp, double mixture)> samples, double epsilon)
+        private double PeakEGTSucessiveApproxAlgorithm(BoundedQueue<(double temp, double mixture)> samples, double epsilon, double step)
         {
             for (int i = 0; i < 15; i++)
             {
@@ -82,7 +82,7 @@
                 }
                 else
                 {
-                    samples = EstimateEGT(samples);
+                    (step, samples) = EstimateEGT(samples, step);
                 }
             }
 
@@ -90,7 +90,7 @@
             return extractResult(samples);
         }
 
-        private BoundedQueue<(double temp, double mixture)> EstimateEGT(BoundedQueue<(double temp, double mixture)> samples)
+        private (double step, BoundedQueue<(double temp, double mixture)>) EstimateEGT(BoundedQueue<(double temp, double mixture)> samples, double step)
         {
             // work with last 3 samples.
 
@@ -106,46 +106,40 @@
 
             string change = string.Empty;
 
-            double nextEGT, nextMixture, nextStep;
+            double nextEGT, nextMixture; //, nextStep;
             if (t1 >0)
             {
                 // most recent change rising - good
                 if (t1 > t0)
                 { 
                     // rising faster & thus moving in right direction
-                    nextStep = - Math.Abs(samples.ElementAt(2).mixture - samples.ElementAt(1).mixture) * 1.0;
+                  //  nextStep = - Math.Abs(samples.ElementAt(2).mixture - samples.ElementAt(1).mixture) * 1.0;
                     change = String.Format ("Rising, but faster {0:00.0}", t1 - t0);
                 }
                 else
                 {
                     // rising slower, convergence, slow down mixture updates
-                    nextStep = - (Math.Abs((samples.ElementAt(2).mixture - samples.ElementAt(1).mixture))) * 0.5;
+                  //  nextStep = - (Math.Abs((samples.ElementAt(2).mixture - samples.ElementAt(1).mixture))) * 0.5;
                     change = String.Format("Rising, but slower {0:00.0}", t1 - t0);
                 }
+
+                // using the computed step
+                // step = nextStep;
+                nextMixture = samples.ElementAt(2).mixture + step;
+                simservice.SetMixture(nextMixture);
+                nextEGT = NextEGT();
+                samples.Enqueue((nextEGT, nextMixture));              
             }
             else
             {
                 // falling, not good
-                // revert to last
-
-                if (t1 < t0)
-                {
-                    // falling & more aggressively, ensure substantial enrichment
-                    nextStep = Math.Abs(samples.ElementAt(2).mixture - samples.ElementAt(1).mixture) * 1.5;
-                    change = String.Format("Falling, but faster {0:00.0}", t1 - t0);
-                }
-                else
-                {
-                    // falling but more slowly, ensure enrichment
-                    nextStep = Math.Abs(samples.ElementAt(2).mixture - samples.ElementAt(1).mixture) * 0.75;
-                    change = String.Format("Falling, but  slower {0:00.0}", t1 - t0);
-                }
+                // step back 2 samples & half step size
+                step = Math.Abs(samples.ElementAt(1).mixture - samples.ElementAt(0).mixture) * 0.5;
+                nextMixture = samples.ElementAt(0).mixture;
+                simservice.SetMixture(nextMixture);
+                nextEGT = NextEGT();
+                samples.Enqueue((nextEGT, nextMixture));
             }
-
-            nextMixture = samples.ElementAt(2).mixture + nextStep;
-            simservice.SetMixture(nextMixture);
-            nextEGT = NextEGT();
-            samples.Enqueue((nextEGT, nextMixture));
 
             {
                 // tn is the next change in EGT arising from a m1 change in mixture
@@ -154,7 +148,7 @@
                 Log.Information(String.Format("{4,25}, Next Mixture change {0,4:00.0}% (to {3,5:0.0}%) temperature change {1:##0.0} F (to {2:####} F)", mn, tn, samples.ElementAt(2).temp, samples.ElementAt(2).mixture, change));
             }
 
-            return samples;
+            return (step, samples);
         }
 
         private double extractResult(BoundedQueue<(double temp, double mixture)> samples)

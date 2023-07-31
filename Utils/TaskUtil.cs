@@ -1,7 +1,9 @@
 ﻿namespace Lside_Mixture.Utils
 {
     using System;
+    using System.Diagnostics;
     using System.Threading;
+    using Serilog;
 
     public class TaskUtil
     {
@@ -11,9 +13,13 @@
         /// <param name="condition">The break condition.</param>
         /// <param name="frequency">The frequency at which the condition will be checked.</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
-        /// <returns></returns>
-        public void WaitUntil(double timeSpan, ConditionCallback condition)
+        /// <param name="minDelaymsec">minimum CYCLE delay in msec</param>
+        /// <returns>How long it waited in seconds</returns>
+        public int WaitUntil(double timeSpan, ConditionCallback condition, int minDelaymsec = 500)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             bool _waitUntilTrue = false;
             System.Timers.Timer timer = new System.Timers.Timer(timeSpan);
             timer.Elapsed += delegate { _waitUntilTrue = true; };
@@ -22,10 +28,11 @@
 
             while (!(_waitUntilTrue || condition()))
             {
-                Thread.Sleep(500);
+                Thread.Sleep(minDelaymsec);
             }
+            stopwatch.Stop();
 
-            Console.WriteLine("Now True");
+            return Convert.ToInt32(stopwatch.Elapsed.TotalSeconds);
         }
 
         public delegate bool ConditionCallback();
