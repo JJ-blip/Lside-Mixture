@@ -5,16 +5,37 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lside-Mixture", "Lside-Mixture.csproj", "{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuageUserControl", "GuageUserControl\GuageUserControl.csproj", "{59BA7115-277A-4CB0-A039-B216AC0D87E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2248D76B-BF6F-494A-ABD6-66441E7EF626}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Debug|x64.ActiveCfg = Debug|x64
+		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Debug|x64.Build.0 = Debug|x64
 		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Release|x64.ActiveCfg = Release|x64
+		{CC802ADB-AEDF-4D54-8938-19D1C2C84A33}.Release|x64.Build.0 = Release|x64
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Debug|x64.Build.0 = Debug|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Release|x64.ActiveCfg = Release|Any CPU
+		{59BA7115-277A-4CB0-A039-B216AC0D87E1}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
